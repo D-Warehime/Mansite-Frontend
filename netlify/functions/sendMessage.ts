@@ -83,33 +83,42 @@ export const handler: Handler = async (event) => {
     }
 
     try {
-      console.log('Attempting Telnyx message send with from:', process.env.TELNYX_PHONE_NUMBER);
+      console.info(`Attempting Telnyx message send with from: ${process.env.TELNYX_PHONE_NUMBER}`);
       const telnyxClient = new Telnyx(process.env.TELNYX_API_KEY);
-      const telnyxResponse = await telnyxClient.messages.create({
+      const messageResponse = await telnyxClient.messages.create({
         from: process.env.TELNYX_PHONE_NUMBER,
         to: phoneNumber,
         text: message,
+        messaging_profile_id: "YOUR_MESSAGING_PROFILE_ID"
       });
-      console.log('Telnyx response:', JSON.stringify(telnyxResponse, null, 2));
+      console.info("Full Telnyx response:", JSON.stringify(messageResponse, null, 2));
+
+      // Check message status
+      if (messageResponse.data.to[0].status === 'queued') {
+        console.info("Message successfully queued");
+        
+        // Update database with queued status
+        await pool.query(
+          'UPDATE messages SET status = $1 WHERE id = $2',
+          ['queued', dbResult.rows[0].id]
+        );
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ 
+            success: true, 
+            message: "Message queued successfully",
+            messageId: messageResponse.data.id
+          })
+        };
+      } else {
+        console.error("Message not queued:", messageResponse.data.to[0].status);
+        throw new Error(`Message status: ${messageResponse.data.to[0].status}`);
+      }
     } catch (telnyxError) {
       console.error('Telnyx error details:', telnyxError.raw?.errors);
       throw new Error(`Telnyx error: ${telnyxError.message}`);
     }
-
-    await pool.query(
-      'UPDATE messages SET status = $1 WHERE id = $2',
-      ['sent', dbResult.rows[0].id]
-    );
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        success: true,
-        message: 'Message sent successfully',
-        messageId: telnyxResponse.data?.id,
-      }),
-    };
   } catch (error) {
     console.error('Error details:', error);
     return {
