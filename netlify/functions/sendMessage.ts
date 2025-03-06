@@ -72,11 +72,17 @@ export const handler: Handler = async (event) => {
     // Add try/catch blocks around each major operation
     try {
       console.log('Attempting database connection...');
-      const dbResult = await pool.query(
-        'INSERT INTO messages (phone_number, message, ip_address, user_agent) VALUES ($1, $2, $3, $4) RETURNING id',
-        [phoneNumber, message, ipAddress, userAgent]
-      );
-      console.log('Database insert successful');
+      let dbResult;
+      try {
+        dbResult = await pool.query(
+          'INSERT INTO messages (phone_number, message, ip_address, user_agent, status) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+          [phoneNumber, message, ipAddress, userAgent, 'pending']
+        );
+        console.log('Database insert successful');
+      } catch (dbError) {
+        console.error('Database error:', dbError);
+        // Continue with message sending even if DB fails
+      }
     } catch (dbError) {
       console.error('Database error:', dbError);
       throw new Error(`Database error: ${dbError.message}`);
@@ -97,11 +103,18 @@ export const handler: Handler = async (event) => {
       if (messageResponse.data.to[0].status === 'queued') {
         console.info("Message successfully queued");
         
-        // Update database with queued status
-        await pool.query(
-          'UPDATE messages SET status = $1 WHERE id = $2',
-          ['queued', dbResult.rows[0].id]
-        );
+        // Update database if we have a dbResult
+        if (dbResult?.rows?.[0]?.id) {
+          try {
+            await pool.query(
+              'UPDATE messages SET status = $1 WHERE id = $2',
+              ['queued', dbResult.rows[0].id]
+            );
+          } catch (dbError) {
+            console.error("Error updating database:", dbError);
+            // Continue even if DB update fails
+          }
+        }
 
         return {
           statusCode: 200,
