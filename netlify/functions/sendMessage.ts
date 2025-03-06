@@ -28,6 +28,13 @@ export const handler: Handler = async (event) => {
   }
 
   try {
+    // Add logging to debug environment variables
+    console.log('Checking environment variables...');
+    console.log('DB_HOST:', process.env.DB_HOST ? 'Set' : 'Not set');
+    console.log('DB_NAME:', process.env.DB_NAME ? 'Set' : 'Not set');
+    console.log('TELNYX_API_KEY:', process.env.TELNYX_API_KEY ? 'Set' : 'Not set');
+    console.log('TELNYX_PHONE_NUMBER:', process.env.TELNYX_PHONE_NUMBER ? 'Set' : 'Not set');
+
     if (!event.body) {
       return { 
         statusCode: 400, 
@@ -39,6 +46,7 @@ export const handler: Handler = async (event) => {
     const { phoneNumber, message } = JSON.parse(event.body);
     const ipAddress = event.headers['client-ip'] || event.headers['x-forwarded-for'] || 'unknown';
     const userAgent = event.headers['user-agent'] || 'unknown';
+    console.log('Received request:', { phoneNumber, message: 'REDACTED' });
 
     if (!phoneNumber || !message) {
       return {
@@ -52,17 +60,32 @@ export const handler: Handler = async (event) => {
       throw new Error('TELNYX_API_KEY is required');
     }
 
-    const dbResult = await pool.query(
-      'INSERT INTO messages (phone_number, message, ip_address, user_agent) VALUES ($1, $2, $3, $4) RETURNING id',
-      [phoneNumber, message, ipAddress, userAgent]
-    );
+    // Add try/catch blocks around each major operation
+    try {
+      console.log('Attempting database connection...');
+      const dbResult = await pool.query(
+        'INSERT INTO messages (phone_number, message, ip_address, user_agent) VALUES ($1, $2, $3, $4) RETURNING id',
+        [phoneNumber, message, ipAddress, userAgent]
+      );
+      console.log('Database insert successful');
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      throw new Error(`Database error: ${dbError.message}`);
+    }
 
-    const telnyxClient = new Telnyx(process.env.TELNYX_API_KEY);
-    const telnyxResponse = await telnyxClient.messages.create({
-      from: process.env.TELNYX_PHONE_NUMBER!,
-      to: phoneNumber,
-      text: message,
-    });
+    try {
+      console.log('Attempting Telnyx message send...');
+      const telnyxClient = new Telnyx(process.env.TELNYX_API_KEY);
+      const telnyxResponse = await telnyxClient.messages.create({
+        from: process.env.TELNYX_PHONE_NUMBER!,
+        to: phoneNumber,
+        text: message,
+      });
+      console.log('Telnyx message sent successfully');
+    } catch (telnyxError) {
+      console.error('Telnyx error:', telnyxError);
+      throw new Error(`Telnyx error: ${telnyxError.message}`);
+    }
 
     await pool.query(
       'UPDATE messages SET status = $1 WHERE id = $2',
@@ -79,7 +102,7 @@ export const handler: Handler = async (event) => {
       }),
     };
   } catch (error) {
-    console.error('Error sending message:', error);
+    console.error('Error details:', error);
     return {
       statusCode: 500,
       headers,
