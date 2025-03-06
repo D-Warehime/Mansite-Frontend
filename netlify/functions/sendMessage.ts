@@ -39,6 +39,11 @@ export const handler: Handler = async (event) => {
     console.log('TELNYX_API_KEY:', process.env.TELNYX_API_KEY ? 'Set' : 'Not set');
     console.log('TELNYX_PHONE_NUMBER:', process.env.TELNYX_PHONE_NUMBER ? 'Set' : 'Not set');
 
+    // Add debug logging
+    console.log('Environment variables check:');
+    console.log('TELNYX_PHONE_NUMBER:', process.env.TELNYX_PHONE_NUMBER);
+    console.log('TELNYX_API_KEY exists:', !!process.env.TELNYX_API_KEY);
+
     if (!event.body) {
       return { 
         statusCode: 400, 
@@ -78,16 +83,16 @@ export const handler: Handler = async (event) => {
     }
 
     try {
-      console.log('Attempting Telnyx message send...');
+      console.log('Attempting Telnyx message send with from:', process.env.TELNYX_PHONE_NUMBER);
       const telnyxClient = new Telnyx(process.env.TELNYX_API_KEY);
       const telnyxResponse = await telnyxClient.messages.create({
-        from: process.env.TELNYX_PHONE_NUMBER!,
+        from: process.env.TELNYX_PHONE_NUMBER,
         to: phoneNumber,
         text: message,
       });
-      console.log('Telnyx message sent successfully');
+      console.log('Telnyx response:', JSON.stringify(telnyxResponse, null, 2));
     } catch (telnyxError) {
-      console.error('Telnyx error:', telnyxError);
+      console.error('Telnyx error details:', telnyxError.raw?.errors);
       throw new Error(`Telnyx error: ${telnyxError.message}`);
     }
 
