@@ -95,7 +95,8 @@ export const handler: Handler = async (event) => {
         from: process.env.TELNYX_PHONE_NUMBER,
         to: phoneNumber,
         text: message,
-        messaging_profile_id: "YOUR_MESSAGING_PROFILE_ID"
+        messaging_profile_id: "YOUR_PROFILE_ID",
+        traffic_type: "P2P"
       });
       console.info("Full Telnyx response:", JSON.stringify(messageResponse, null, 2));
 
