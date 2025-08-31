@@ -1,0 +1,11 @@
+---
+description: Writing code to finish longer tasks
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+
+- Do Not stop until the task described is finished.
+- Write out 2-3 short quick paragraphs describing everything you're about to accomplish (from an overhead perspective if its a lot) all before you start writing any code.
+- If possible provide two separate solutions and weigh each one evenly and present them both.

@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[dev]
+  port = 4010
+  framework = "create-react-app"
+  targetPort = 3000
+  autoLaunch = true
+  command = "npm start"
+  publish = "build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200 
