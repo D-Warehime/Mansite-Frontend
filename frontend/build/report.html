@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Violations - Mansite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #000;
+            color: #00ff00;
+        }
+        h1, h2, h3 {
+            color: #00ff00;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 10px;
+        }
+        .container {
+            background-color: #121212;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #00ff00;
+        }
+        .back-link {
+            margin-bottom: 20px;
+        }
+        .back-link a {
+            color: #00ff00;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .warning {
+            background-color: #3d1a1a;
+            border: 1px solid #ff4444;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .emergency {
+            background-color: #ff0000;
+            border: 2px solid #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            background-color: #000;
+            color: #00ff00;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #00ff00;
+            color: #000;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #00cc00;
+        }
+        .required {
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-link">
+            <a href="/">← Back to Mansite</a>
+        </div>
+        
+        <h1>Report Violations</h1>
+        <p><strong>Report harassment, threats, or misuse of the Mansite service</strong></p>
+        
+        <div class="emergency">
+            <h2>🚨 EMERGENCY SITUATION?</h2>
+            <p><strong>If you are experiencing immediate threats, harassment, or danger:</strong></p>
+            <p><strong>CALL 911 OR CONTACT LAW ENFORCEMENT IMMEDIATELY</strong></p>
+            <p>This reporting form is for documentation purposes only and is not a substitute for emergency services.</p>
+        </div>
+        
+        <div class="warning">
+            <h3>⚠️ IMPORTANT INFORMATION</h3>
+            <p><strong>Mansite is designed EXCLUSIVELY for sending SMS messages to YOUR OWN phone number.</strong></p>
+            <p>If someone is using this service to harass you or send unwanted messages, they are violating our terms and potentially breaking the law.</p>
+        </div>
+        
+        <h2>What to Report</h2>
+        <p>Please report any of the following:</p>
+        <ul>
+            <li><strong>Harassment:</strong> Repeated unwanted messages or contact</li>
+            <li><strong>Threats:</strong> Messages containing threats of violence or harm</li>
+            <li><strong>Impersonation:</strong> Someone pretending to be you or someone else</li>
+            <li><strong>Stalking:</strong> Unwanted following or monitoring</li>
+            <li><strong>Cyberbullying:</strong> Online harassment or intimidation</li>
+            <li><strong>Fraud:</strong> Attempts to deceive or defraud</li>
+            <li><strong>Misuse:</strong> Using the service to contact others instead of themselves</li>
+        </ul>
+        
+        <h2>Report Form</h2>
+        <form id="reportForm">
+            <div class="form-group">
+                <label for="reporterName">Your Name <span class="required">*</span></label>
+                <input type="text" id="reporterName" name="reporterName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="reporterEmail">Your Email <span class="required">*</span></label>
+                <input type="email" id="reporterEmail" name="reporterEmail" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="reporterPhone">Your Phone Number</label>
+                <input type="tel" id="reporterPhone" name="reporterPhone">
+            </div>
+            
+            <div class="form-group">
+                <label for="violationType">Type of Violation <span class="required">*</span></label>
+                <select id="violationType" name="violationType" required>
+                    <option value="">Select violation type</option>
+                    <option value="harassment">Harassment</option>
+                    <option value="threats">Threats of Violence</option>
+                    <option value="impersonation">Impersonation</option>
+                    <option value="stalking">Stalking</option>
+                    <option value="cyberbullying">Cyberbullying</option>
+                    <option value="fraud">Fraud</option>
+                    <option value="misuse">Service Misuse</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="incidentDate">Date of Incident <span class="required">*</span></label>
+                <input type="date" id="incidentDate" name="incidentDate" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="incidentDescription">Description of Incident <span class="required">*</span></label>
+                <textarea id="incidentDescription" name="incidentDescription" required 
+                    placeholder="Please provide a detailed description of what happened, including any relevant details about the messages, timing, and impact on you."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="evidence">Evidence (Optional)</label>
+                <textarea id="evidence" name="evidence" 
+                    placeholder="Any additional evidence, screenshots, or information that might help with the investigation."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="policeReport">Police Report Filed?</label>
+                <select id="policeReport" name="policeReport">
+                    <option value="">Select option</option>
+                    <option value="yes">Yes, I have filed a police report</option>
+                    <option value="no">No, I have not filed a police report</option>
+                    <option value="planning">I am planning to file a police report</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="policeReportNumber">Police Report Number (if applicable)</label>
+                <input type="text" id="policeReportNumber" name="policeReportNumber">
+            </div>
+            
+            <div class="form-group">
+                <label for="contactLawEnforcement">Would you like us to contact law enforcement?</label>
+                <select id="contactLawEnforcement" name="contactLawEnforcement">
+                    <option value="">Select option</option>
+                    <option value="yes">Yes, please contact law enforcement</option>
+                    <option value="no">No, I prefer to handle this myself</option>
+                    <option value="maybe">I'm not sure yet</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="additionalInfo">Additional Information</label>
+                <textarea id="additionalInfo" name="additionalInfo" 
+                    placeholder="Any other information you think might be relevant to this report."></textarea>
+            </div>
+            
+            <button type="submit">Submit Report</button>
+        </form>
+        
+        <div class="warning" style="margin-top: 30px;">
+            <h3>📋 What Happens Next?</h3>
+            <ol>
+                <li><strong>Immediate Review:</strong> We review all reports within 24 hours</li>
+                <li><strong>Investigation:</strong> We investigate the reported violation</li>
+                <li><strong>Action Taken:</strong> Appropriate action is taken against violators</li>
+                <li><strong>Law Enforcement:</strong> Serious violations are reported to authorities</li>
+                <li><strong>Follow-up:</strong> We may contact you for additional information</li>
+            </ol>
+        </div>
+        
+        <div class="important" style="margin-top: 20px;">
+            <h3>🛡️ Your Safety is Important</h3>
+            <p>If you feel unsafe or threatened:</p>
+            <ul>
+                <li>Contact law enforcement immediately</li>
+                <li>Document all incidents and communications</li>
+                <li>Consider changing your phone number if necessary</li>
+                <li>Seek support from friends, family, or professionals</li>
+                <li>Use this form to document the incident for legal purposes</li>
+            </ul>
+        </div>
+        
+        <h2>Contact Information</h2>
+        <p>For urgent matters or if you need immediate assistance:</p>
+        <ul>
+            <li><strong>Emergency:</strong> Call 911</li>
+            <li><strong>Non-Emergency Police:</strong> Check your local police department</li>
+            <li><strong>Cybercrime:</strong> Report to <a href="https://www.ic3.gov" target="_blank" style="color: #00ff00;">Internet Crime Complaint Center (IC3)</a></li>
+            <li><strong>General Support:</strong> Contact us through the main site</li>
+        </ul>
+        
+        <p><em>This reporting system helps us maintain a safe and compliant service. All reports are taken seriously and investigated thoroughly.</em></p>
+    </div>
+    
+    <script>
+        // Set today's date as default for incident date
+        document.getElementById('incidentDate').valueAsDate = new Date();
+        
+        // Form submission handling
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Show confirmation message
+            alert('Thank you for your report. We take all violations seriously and will investigate this matter. You will receive a confirmation email shortly.');
+            
+            // Reset form
+            this.reset();
+            document.getElementById('incidentDate').valueAsDate = new Date();
+        });
+    </script>
+</body>
+</html>
